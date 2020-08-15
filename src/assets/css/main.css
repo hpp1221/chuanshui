@@ -23,7 +23,7 @@ a {
 
 .content-box {
     position: absolute;
-    left: 250px;
+    left: 208px;
     right: 0;
     top: 70px;
     bottom: 0;
@@ -171,7 +171,59 @@ a {
 }
 
 /*markdown*/
+/*清除浮动*/
+.clearfix:after {
+    content: ".";  /* 内容为小点， 尽量加不要空， 否则旧版本浏览器有空隙 */
+    display: block;  /* 转换为块级元素 */
+    height: 0; /* 高度为0 */
+    visibility: hidden;  /* 隐藏盒子 */
+    clear: both; /* 清除浮动 */
+}
+.clearfix {  /* ie6.7浏览器的处理方式 */
+    *zoom: 1;
+    /*  * 代表ie6.7能识别的特殊符号  带有这个*的属性 只有ie6.7才执行
+     zoom 就是ie6.7 清除浮动的方法 */
+}
 
 .v-note-wrapper .v-note-panel {
     min-height: 500px;
+}
+.global-table-title{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 62px;
+}
+.global-table-title .title{
+    display: flex;
+    align-items: center;
+}
+.global-table-title .title i{
+    width: 4px;
+    height: 16px;
+    background: #1890FF;
+    border-radius: 2px;
+    display: inline-block;
+}
+.global-table-title .title span{
+    color: rgba(0,0,0,0.85);
+    font-size: 16px;
+    margin-left: 8px;
+    line-height: 1;
+}
+/*分页器居中*/
+.el-pagination{
+    display: flex;
+    justify-content: center;
+}
+/*定位*/
+.pos-relative{
+    position: relative;
+}
+.pos-absolute{
+    position: absolute;
+}
+/*表格操作*/
+.el-button--text{
+    margin-right: 20px;
 }

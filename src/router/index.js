@@ -1,6 +1,9 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-
+const originalPush = Router.prototype.push;
+Router.prototype.push = function push(location) {
+    return originalPush.call(this, location).catch(err => err);
+};
 Vue.use(Router);
 
 export default new Router({
@@ -28,6 +31,34 @@ export default new Router({
                     path: '/table',
                     component: () => import(/* webpackChunkName: "table" */ '../components/page/BaseTable.vue'),
                     meta: { title: '基础表格' }
+                },
+                {
+                    path: '/product-list',
+                    component: () =>
+                        import(/* webpackChunkName: "table" */ '../components/page/cargo-management/product-list/ProductList.vue'),
+                    meta: { title: '产品列表' }
+                },
+                {
+                    path: '/product-category',
+                    component: () =>
+                        import(/* webpackChunkName: "table" */ '../components/page/cargo-management/product-category/ProductCategory.vue'),
+                    meta: { title: '产品分类' }
+                },
+                {
+                    path: '/shelf-list',
+                    component: () => import(/* webpackChunkName: "table" */ '../components/page/shelf-management/shelf-list/ShelfList.vue'),
+                    meta: { title: '货架列表' }
+                },
+                {
+                    path: '/order-list',
+                    component: () => import(/* webpackChunkName: "table" */ '../components/page/order-management/order-list/OrderList.vue'),
+                    meta: { title: '订单列表' }
+                },
+                {
+                    path: '/user-list',
+                    component: () =>
+                        import(/* webpackChunkName: "table" */ '../components/page/system-settings/user-management/UserList.vue'),
+                    meta: { title: '用户管理' }
                 },
                 {
                     path: '/tabs',
@@ -101,6 +132,11 @@ export default new Router({
                     path: '/donate',
                     component: () => import(/* webpackChunkName: "donate" */ '../components/page/Donate.vue'),
                     meta: { title: '支持作者' }
+                },
+                {
+                    path: '/test',
+                    component: () => import(/* webpackChunkName: "403" */ '../components/page/test.vue'),
+                    meta: { title: '测试' }
                 }
             ]
         },

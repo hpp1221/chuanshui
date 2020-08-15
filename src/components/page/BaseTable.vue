@@ -21,6 +21,8 @@
                 </el-select>
                 <el-input v-model="query.name" placeholder="用户名" class="handle-input mr10"></el-input>
                 <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
+                <el-button type="primary" icon="el-icon-search" @click="addPage">添加</el-button>
+                <el-button type="primary" icon="el-icon-search" @click="testPage">测试啊</el-button>
             </div>
             <el-table
                 :data="tableData"
@@ -139,6 +141,14 @@ export default {
         handleSearch() {
             this.$set(this.query, 'pageIndex', 1);
             this.getData();
+        },
+        addPage(){
+            // this.$route.query
+            this.$router.push({path: '/test', query: { pid: '1' }});
+        },
+        testPage(){
+            // this.$route.query
+            this.$router.push({path: '/test', query: { pid: '2' }});
         },
         // 删除操作
         handleDelete(index, row) {

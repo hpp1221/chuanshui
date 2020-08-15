@@ -18,23 +18,13 @@
                             <span slot="title">{{ item.title }}</span>
                         </template>
                         <template v-for="subItem in item.subs">
-                            <el-submenu
-                                v-if="subItem.subs"
-                                :index="subItem.index"
-                                :key="subItem.index"
-                            >
+                            <el-submenu v-if="subItem.subs" :index="subItem.index" :key="subItem.index">
                                 <template slot="title">{{ subItem.title }}</template>
-                                <el-menu-item
-                                    v-for="(threeItem,i) in subItem.subs"
-                                    :key="i"
-                                    :index="threeItem.index"
-                                >{{ threeItem.title }}</el-menu-item>
+                                <el-menu-item v-for="(threeItem, i) in subItem.subs" :key="i" :index="threeItem.index">{{
+                                    threeItem.title
+                                }}</el-menu-item>
                             </el-submenu>
-                            <el-menu-item
-                                v-else
-                                :index="subItem.index"
-                                :key="subItem.index"
-                            >{{ subItem.title }}</el-menu-item>
+                            <el-menu-item v-else :index="subItem.index" :key="subItem.index">{{ subItem.title }}</el-menu-item>
                         </template>
                     </el-submenu>
                 </template>
@@ -67,6 +57,54 @@ export default {
                     title: '基础表格'
                 },
                 {
+                    icon: 'el-icon-rank',
+                    index: 'cargo',
+                    title: '货物管理',
+                    subs: [
+                        {
+                            index: 'product-list',
+                            title: '产品列表'
+                        },
+                        {
+                            index: 'product-category',
+                            title: '产品分类'
+                        }
+                    ]
+                },
+                {
+                    icon: 'el-icon-lx-home',
+                    index: 'shelf',
+                    title: '货架管理',
+                    subs: [
+                        {
+                            index: 'shelf-list',
+                            title: '货架列表'
+                        }
+                    ]
+                },
+                {
+                    icon: 'el-icon-s-order',
+                    index: 'order',
+                    title: '订单管理',
+                    subs: [
+                        {
+                            index: 'order-list',
+                            title: '订单列表'
+                        }
+                    ]
+                },
+                {
+                    icon: 'el-icon-setting',
+                    index: 'setting',
+                    title: '系统设置',
+                    subs: [
+                        {
+                            index: 'user-list',
+                            title: '用户管理'
+                        }
+                    ]
+                }
+                /*{
                     icon: 'el-icon-lx-copy',
                     index: 'tabs',
                     title: 'tab选项卡'
@@ -149,7 +187,7 @@ export default {
                     icon: 'el-icon-lx-redpacket_fill',
                     index: '/donate',
                     title: '支持作者'
-                }
+                }*/
             ]
         };
     },
@@ -160,10 +198,10 @@ export default {
     },
     created() {
         // 通过 Event Bus 进行组件间通信，来折叠侧边栏
-        bus.$on('collapse', msg => {
+        /*bus.$on('collapse', msg => {
             this.collapse = msg;
             bus.$emit('collapse-content', msg);
-        });
+        });*/
     }
 };
 </script>
@@ -181,7 +219,7 @@ export default {
     width: 0;
 }
 .sidebar-el-menu:not(.el-menu--collapse) {
-    width: 250px;
+    width: 208px;
 }
 .sidebar > ul {
     height: 100%;
