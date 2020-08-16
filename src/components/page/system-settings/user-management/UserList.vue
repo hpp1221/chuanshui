@@ -78,9 +78,6 @@
                 </el-table-column>
             </el-table>
             <div class="pagination pos-relative">
-                <!--<div class="pos-absolute">
-                    <el-button type="success" @click="addPage">打印标贴</el-button>
-                </div>-->
                 <el-pagination
                     background
                     layout="total, prev, pager, next"
@@ -93,18 +90,18 @@
         </div>
 
         <!-- 添加新用户/编辑用户弹出框 -->
-        <el-dialog :title="addOrEdit === 'add'?'添加新用户':'编辑'" :visible.sync="editVisible" width="640px" :destroy-on-close="true">
+        <el-dialog :title="addOrEdit === 'add'?'添加新用户':'编辑'" :visible.sync="editVisible" width="660px" :before-close="editClose" :destroy-on-close="true">
             <el-form ref="editForm" :rules="editFormRules" :model="editForm">
                 <div class="form-content">
                     <div class="form-left">
                         <el-form-item label="用户名" prop="user_name">
-                            <el-input v-model="editForm.user_name"></el-input>
+                            <el-input v-model="editForm.user_name" placeholder="请输入用户名"></el-input>
                         </el-form-item>
                         <el-form-item v-if="addOrEdit === 'add'" label="密码" prop="password">
-                            <el-input v-model="editForm.password"></el-input>
+                            <el-input v-model="editForm.password" placeholder="请输入密码"></el-input>
                         </el-form-item>
-                        <el-form-item label="角色名称" prop="role_name">
-                            <el-select v-model="editForm.role_name" placeholder="请选择">
+                        <el-form-item label="角色名称" prop="role_id">
+                            <el-select v-model="editForm.role_id" placeholder="请选择角色">
                                 <el-option  v-for="state in roleNameOptions" :key="state.key" :value="state.key" :label="state.name" />
                             </el-select>
                         </el-form-item>
@@ -116,24 +113,24 @@
                     </div>
                     <div class="form-right">
                         <el-form-item v-if="addOrEdit === 'add'" label="登录账号" prop="nick_name">
-                            <el-input v-model="editForm.nick_name"></el-input>
+                            <el-input v-model="editForm.nick_name" placeholder="请输入登录账号"></el-input>
                         </el-form-item>
                         <el-form-item label="手机号" prop="phone_no">
-                            <el-input v-model="editForm.phone_no"></el-input>
+                            <el-input v-model="editForm.phone_no" placeholder="请输入手机号码"></el-input>
                         </el-form-item>
                         <el-form-item label="状态选择" prop="status">
-                            <el-select v-model="editForm.status" placeholder="请选择">
+                            <el-select v-model="editForm.status" placeholder="请选择状态">
                                 <el-option  v-for="state in userStatusOptions" :key="state.key" :value="state.key" :label="state.name" />
                             </el-select>
                         </el-form-item>
                         <el-form-item label="备注" prop="remark">
-                            <el-input v-model="editForm.remark"></el-input>
+                            <el-input v-model="editForm.remark" placeholder="请填写备注"></el-input>
                         </el-form-item>
                     </div>
                 </div>
             </el-form>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="editVisible = false">取 消</el-button>
+                <el-button @click="editClose">取 消</el-button>
                 <el-button type="primary" @click="saveEdit('editForm')">确 定</el-button>
             </span>
         </el-dialog>
@@ -190,7 +187,7 @@ export default {
             editForm: {
                 user_name:'',
                 password:'',
-                role_name:'',
+                role_id:'',
                 is_super:'',
                 nick_name:'',
                 phone_no:'',
@@ -207,7 +204,7 @@ export default {
                     { min: 6, max: 64, message: '请输入6-64位密码', trigger: 'blur' }
                 ],
                 role_id: [
-                    { required: true, message: '请输入角色名称', trigger: 'change' },
+                    { required: true, message: '请选择角色名称', trigger: 'change' },
                 ],
                 is_super: [
                     { required: true, message: '请选择是否是超级管理员', trigger: 'change' },
@@ -233,10 +230,7 @@ export default {
             id: -1,
             roleNameOptions: [],
             userStatusOptions: [],
-            isSuperOptions:[
-                { key: '1', name: '是' },
-                { key: '0', name: '否' }
-            ],
+            isSuperOptions:[],
             tableData2: [
                 {
                     "id": 1,
@@ -314,7 +308,7 @@ export default {
             }
         };
     },
-    created() {
+    mounted() {
         this.getData();
         this.roleNameOptions = [
             { key: '1', name: '角色1' },
@@ -324,10 +318,14 @@ export default {
             { key: '1', name: '启用' },
             { key: '2', name: '停用' }
         ];
+        this.isSuperOptions = [
+            { key: '1', name: '是' },
+            { key: '0', name: '否' }
+        ]
     },
-    mounted() {
-
-    },
+    // mounted() {
+    //
+    // },
     methods: {
         // 获取 easy-mock 的模拟数据
         getData() {
@@ -354,31 +352,34 @@ export default {
             this.$set(this.pageInfo, 'pageIndex', 1);
             this.getData();
         },
-        addPage() {
-            // this.$route.query
-            this.$router.push({ path: '/test', query: { pid: '1' } });
+        // 添加用户
+        addUser(){
+            this.addOrEdit = 'add';
+            this.editForm.nick_name = '';
+            this.editVisible = true;
         },
-        testPage() {
-            // this.$route.pageInfo
-            this.$router.push({ path: '/test', query: { pid: '2' } });
-        },
-        // 编辑操作
+        // 编辑用户操作
         handleEdit(index, row) {
             this.addOrEdit = 'edit';
             this.idx = index;
-            this.editForm = Object.assign({}, row);
-            if(row.status > 0){
-                this.editForm.status = '1';
-            }else {
-                this.editForm.status = '2';
-            }
-            if(row.role_name === '超级管理员'){
-                this.editForm.is_super = '1';
-            }else {
-                this.editForm.is_super = '0';
-            }
-            this.editForm.role_id = row.role_id.toString();
             this.editVisible = true;
+            this.$nextTick(()=> {
+                // 赋值
+
+                if(row.status > 0){
+                    row.status = '1';
+                }else {
+                    row.status = '2';
+                }
+                if(row.role_name === '超级管理员'){
+                    row.is_super = '1';
+                }else {
+                    row.is_super = '0';
+                }
+                row.role_id = row.role_id.toString();
+                // 触发更新
+                this.editForm = Object.assign({}, this.editForm,row);
+            })
         },
         // 保存编辑
         saveEdit(formName) {
@@ -404,14 +405,6 @@ export default {
         // 重置
         resetForm(formName) {
             this.$refs[formName].resetFields();
-        },
-        // 添加用户
-        addUser(){
-            this.addOrEdit = 'add';
-            this.$nextTick(() => {
-                this.$refs['editForm'].resetFields();
-            });
-            this.editVisible = true;
         },
         //  启用操作
         handleEnable(index, row){
@@ -454,6 +447,11 @@ export default {
         savePassword(){
             this.changePasswordVisible = false;
         },
+        editClose(){
+            console.log('11111');
+            this.$refs['editForm'].resetFields();
+            this.editVisible = false;
+        }
 
     }
 };
