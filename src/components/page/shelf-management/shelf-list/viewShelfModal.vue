@@ -32,9 +32,17 @@
         <span slot="footer" class="dialog-footer">
             <el-button type="primary" @click="handleSureModal">确 定</el-button>
         </span>
+        <!-- 修改库存弹出框 -->
         <ModificationStock
-            v-if="recordInfo.visible"
-            :recordInfo="recordInfo"
+            v-if="stockModalInfo.visible"
+            :stockModalInfo="stockModalInfo"
+            @handleCloseStockModal="handleCloseStockModal"
+            @handleSureStockModal="handleSureStockModal"
+        />
+        <!-- 操作记录弹出框 -->
+        <OperationRecord
+            v-if="recordModalInfo.visible"
+            :recordModalInfo="recordModalInfo"
             @handleCloseRecordModal="handleCloseRecordModal"
             @handleSureRecordModal="handleSureRecordModal"
         />
@@ -43,11 +51,13 @@
 <script>
 import './ShelfList.less';
 import ModificationStock from '../../../common/modification-stock/ModificationStock';
+import OperationRecord from '../../../common/operation-record/OperationRecord';
 export default {
     name: 'ViewShelfModal',
     props: ['viewShelfInfo'],
     components: {
-        ModificationStock
+        ModificationStock,
+        OperationRecord
     },
     data() {
         return {
@@ -119,10 +129,14 @@ export default {
             ], //列表
             loading: false,
             multipleSelection: [], //多选
-            recordInfo: {
+            stockModalInfo: {
                 visible: false,
                 currentItem: {}
-            } //修改记录信息
+            }, //修改库存信息
+            recordModalInfo: {
+                visible: false,
+                currentItem: {}
+            } //操作记录信息
         };
     },
     methods: {
@@ -138,15 +152,27 @@ export default {
         handlePrintLabel() {},
         //打开修改库存弹出框
         handleEditStock(index, row) {
-            this.recordInfo = Object.assign({}, this.recordInfo, { currentItem: row, visible: true });
+            this.stockModalInfo = Object.assign({}, this.stockModalInfo, { currentItem: row, visible: true });
+        },
+        //修改库存记录关闭回调
+        handleCloseStockModal(visible) {
+            this.$set(this.stockModalInfo, 'visible', visible);
+        },
+        //修改库存记录确定回调
+        handleSureStockModal(visible) {
+            this.$set(this.stockModalInfo, 'visible', visible);
+        },
+        //打开操作记录弹出框
+        handleOperateRecord() {
+            this.recordModalInfo = Object.assign({}, this.recordModalInfo, { currentItem: row, visible: true });
         },
         //修改库存记录关闭回调
         handleCloseRecordModal(visible) {
-            this.$set(this.recordInfo, 'visible', visible);
+            this.$set(this.recordModalInfo, 'visible', visible);
         },
         //修改库存记录确定回调
         handleSureRecordModal(visible) {
-            this.$set(this.recordInfo, 'visible', visible);
+            this.$set(this.recordModalInfo, 'visible', visible);
         }
     }
 };
