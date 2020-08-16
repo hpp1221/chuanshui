@@ -1,122 +1,155 @@
 <template>
     <div>
         <div class="container clearfix">
-            <div class="handle-box">
-                <span class="input-title">产品名称：</span>
-                <el-input v-model="query.name" placeholder="请输入" class="handle-input mr10"></el-input>
-                <span class="input-title">产品分类：</span>
-                <el-select v-model="MissionTemplateForm.category" placeholder="请选择" class="handle-select mr10">
-                    <el-option v-for="state in categoryOptions" :key="state.key" :value="state.key" :label="state.name" />
-                </el-select>
-                <span class="input-title">产品标签：</span>
-                <el-cascader
-                    placeholder="请选择"
-                    :options="options"
-                    :show-all-levels="false"
-                    :props="{ multiple: true }"
-                    filterable
-                ></el-cascader>
-                <!--<el-button type="primary" icon="el-icon-search" @click="addPage">添加</el-button>
-                <el-button type="primary" icon="el-icon-search" @click="testPage">测试啊</el-button>-->
-            </div>
-            <div class="btn-right">
-                <el-button @click="handleSearch">重置</el-button>
-                <el-button type="primary" @click="handleSearch">搜索</el-button>
-            </div>
+            <el-form :model="searchForm" :inline="true" ref="searchForm" label-width="80px">
+                <el-form-item label="登录账户:" prop="account">
+                    <el-input v-model="searchForm.account"></el-input>
+                </el-form-item>
+                <el-form-item label="角色名称:" prop="roleName">
+                    <el-select v-model="searchForm.roleName" placeholder="请选择">
+                        <el-option  v-for="state in roleNameOptions" :key="state.key" :value="state.key" :label="state.name" />
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="用户状态:" prop="userStatus">
+                    <el-select v-model="searchForm.userStatus" placeholder="请选择">
+                        <el-option  v-for="state in userStatusOptions" :key="state.key" :value="state.key" :label="state.name" />
+                    </el-select>
+                </el-form-item>
+                <el-form-item><!-- class="btn-right margin-right0"-->
+                    <div class="btn-right">
+                        <!--<el-button @click="resetForm('searchForm')">重置</el-button>-->
+                        <el-button type="primary" @click="handleSearch('searchForm')">搜索</el-button>
+                        <el-button type="success" @click="addUser('add')">添加用户</el-button>
+                    </div>
+                </el-form-item>
+            </el-form>
         </div>
         <div class="container m-t-16 p-t-0">
             <div class="global-table-title">
                 <div class="title">
                     <i></i>
-                    <span>产品列表</span>
+                    <span>用户列表</span>
                 </div>
-                <el-button type="primary" @click="addPage">新增产品</el-button>
             </div>
-            <el-table v-loading="loading" :data="tableData2" ref="multipleTable">
-                <!--                <el-table-column type="selection" width="55" align="center"></el-table-column>-->
-                <el-table-column prop="code" label="编号" width="75" align="center"></el-table-column>
-                <el-table-column prop="name" label="产品名称"></el-table-column>
-                <el-table-column prop="type" label="产品">
-                    <!--                    <template slot-scope="scope">￥{{scope.row.money}}</template>-->
+            <el-table v-loading="loading" :data="tableData" ref="multipleTable">
+                <el-table-column prop="id" label="编号" width="75" align="center"></el-table-column>
+                <el-table-column prop="user_name" label="用户名"></el-table-column>
+                <el-table-column prop="nick_name" label="登录账户"></el-table-column>
+                <el-table-column prop="role_id" label="角色名称">
+                    <template scope="scope">
+                        <span v-show="scope.row.role_id===0">普通用户</span>
+                        <span v-show="scope.row.role_id===1">超级管理员</span>
+                    </template>
                 </el-table-column>
-                <el-table-column prop="all_num" label="总库存"></el-table-column>
-                <el-table-column prop="use_num" label="可用库存"></el-table-column>
+                <el-table-column prop="status" label="用户状态">
+                    <template scope="scope">
+                        <span class="status-ball" :class="scope.row.status===1?'color-success':'color-err'"></span>
+                        <span v-if="scope.row.status===0" class="font-stop">停用</span>
+                        <span v-if="scope.row.status===1" class="font-use">使用中</span>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="phone_no" label="手机号"></el-table-column>
+                <el-table-column prop="role_id" label="是否超级管理员">
+                    <template scope="scope">
+                        <span v-show="scope.row.role_id===0">否</span>
+                        <span v-show="scope.row.role_id===1">是</span>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="remark" label="备注">
+                    <template scope="scope">
+                        <el-tooltip placement="top" effect="light" popper-class="tooltip-remark">
+                            <div slot="content" class="remark-box">
+                                <div class="remark-title">备注</div>
+                                <div class="remark-content">{{scope.row.remark}}</div>
+                            </div>
+                            <i class="el-icon-warning cursor-class"></i>
+                        </el-tooltip>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="updated_time" label="最后登录时间"></el-table-column>
+                <el-table-column prop="created_time" label="创建时间"></el-table-column>
                 <el-table-column label="操作" width="180" align="center">
                     <template slot-scope="scope">
                         <el-button type="text" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-                        <el-button type="text" @click="handleDelete(scope.$index, scope.row)">查看</el-button>
-                        <el-button type="text" @click="handleDelete(scope.$index, scope.row)">锁定</el-button>
+                        <el-button type="text" @click="changePassword(scope.$index, scope.row)">修改密码</el-button>
+                        <el-button v-show="scope.row.status===1" type="text" @click="handleStop(scope.$index, scope.row)">停用</el-button>
+                        <el-button v-show="scope.row.status===0" type="text" @click="handleEnable(scope.$index, scope.row)">启用</el-button>
                     </template>
                 </el-table-column>
             </el-table>
             <div class="pagination pos-relative">
-                <div class="aa">11111</div>
-                <div class="pos-absolute">
+                <!--<div class="pos-absolute">
                     <el-button type="success" @click="addPage">打印标贴</el-button>
-                </div>
+                </div>-->
                 <el-pagination
                     background
                     layout="total, prev, pager, next"
-                    :current-page="query.pageIndex"
-                    :page-size="query.pageSize"
-                    :total="pageTotal"
-                    @current-change="handlePageChange"
-                ></el-pagination>
-            </div>
-        </div><div class="container m-t-16 p-t-0">
-            <div class="global-table-title">
-                <div class="title">
-                    <i></i>
-                    <span>产品列表</span>
-                </div>
-                <el-button type="primary" @click="addPage">新增产品</el-button>
-            </div>
-            <el-table v-loading="loading" :data="tableData2" ref="multipleTable">
-                <!--                <el-table-column type="selection" width="55" align="center"></el-table-column>-->
-                <el-table-column prop="code" label="编号" width="75" align="center"></el-table-column>
-                <el-table-column prop="name" label="产品名称"></el-table-column>
-                <el-table-column prop="type" label="产品">
-                    <!--                    <template slot-scope="scope">￥{{scope.row.money}}</template>-->
-                </el-table-column>
-                <el-table-column prop="all_num" label="总库存"></el-table-column>
-                <el-table-column prop="use_num" label="可用库存"></el-table-column>
-                <el-table-column label="操作" width="180" align="center">
-                    <template slot-scope="scope">
-                        <el-button type="text" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-                        <el-button type="text" @click="handleDelete(scope.$index, scope.row)">查看</el-button>
-                        <el-button type="text" @click="handleDelete(scope.$index, scope.row)">锁定</el-button>
-                    </template>
-                </el-table-column>
-            </el-table>
-            <div class="pagination pos-relative">
-                <div class="aa">11111</div>
-                <div class="pos-absolute">
-                    <el-button type="success" @click="addPage">打印标贴</el-button>
-                </div>
-                <el-pagination
-                    background
-                    layout="total, prev, pager, next"
-                    :current-page="query.pageIndex"
-                    :page-size="query.pageSize"
+                    :current-page="pageInfo.pageIndex"
+                    :page-size="pageInfo.pageSize"
                     :total="pageTotal"
                     @current-change="handlePageChange"
                 ></el-pagination>
             </div>
         </div>
 
-        <!-- 编辑弹出框 -->
-        <el-dialog title="编辑" :visible.sync="editVisible" width="30%">
-            <el-form ref="form" :model="form" label-width="70px">
-                <el-form-item label="用户名">
-                    <el-input v-model="form.name"></el-input>
-                </el-form-item>
-                <el-form-item label="地址">
-                    <el-input v-model="form.address"></el-input>
-                </el-form-item>
+        <!-- 添加新用户/编辑用户弹出框 -->
+        <el-dialog :title="addOrEdit === 'add'?'添加新用户':'编辑'" :visible.sync="editVisible" width="640px" :destroy-on-close="true">
+            <el-form ref="editForm" :rules="editFormRules" :model="editForm">
+                <div class="form-content">
+                    <div class="form-left">
+                        <el-form-item label="用户名" prop="user_name">
+                            <el-input v-model="editForm.user_name"></el-input>
+                        </el-form-item>
+                        <el-form-item v-if="addOrEdit === 'add'" label="密码" prop="password">
+                            <el-input v-model="editForm.password"></el-input>
+                        </el-form-item>
+                        <el-form-item label="角色名称" prop="role_name">
+                            <el-select v-model="editForm.role_name" placeholder="请选择">
+                                <el-option  v-for="state in roleNameOptions" :key="state.key" :value="state.key" :label="state.name" />
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="是否是超级会员" prop="is_super">
+                            <el-select v-model="editForm.is_super" placeholder="请选择">
+                                <el-option  v-for="state in isSuperOptions" :key="state.key" :value="state.key" :label="state.name" />
+                            </el-select>
+                        </el-form-item>
+                    </div>
+                    <div class="form-right">
+                        <el-form-item v-if="addOrEdit === 'add'" label="登录账号" prop="nick_name">
+                            <el-input v-model="editForm.nick_name"></el-input>
+                        </el-form-item>
+                        <el-form-item label="手机号" prop="phone_no">
+                            <el-input v-model="editForm.phone_no"></el-input>
+                        </el-form-item>
+                        <el-form-item label="状态选择" prop="status">
+                            <el-select v-model="editForm.status" placeholder="请选择">
+                                <el-option  v-for="state in userStatusOptions" :key="state.key" :value="state.key" :label="state.name" />
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="备注" prop="remark">
+                            <el-input v-model="editForm.remark"></el-input>
+                        </el-form-item>
+                    </div>
+                </div>
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="editVisible = false">取 消</el-button>
-                <el-button type="primary" @click="saveEdit">确 定</el-button>
+                <el-button type="primary" @click="saveEdit('editForm')">确 定</el-button>
+            </span>
+        </el-dialog>
+        <!-- 修改密码弹出框 -->
+        <el-dialog title="修改密码" :visible.sync="changePasswordVisible" width="300px" destroy-on-close="destroy-on-close">
+            <el-form ref="changePasswordForm" :rules="changePasswordRules" :model="changePasswordForm">
+                <el-form-item label="新密码" prop="password">
+                    <el-input v-model="changePasswordForm.password"></el-input>
+                </el-form-item>
+                <el-form-item label="确认密码" prop="passwordSure">
+                    <el-input v-model="changePasswordForm.password"></el-input>
+                </el-form-item>
+            </el-form>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="changePasswordVisible = false">取 消</el-button>
+                <el-button type="primary" @click="savePassword">确 定</el-button>
             </span>
         </el-dialog>
     </div>
@@ -128,213 +161,197 @@ import './UserList.less';
 export default {
     name: 'userList',
     data() {
+        // 自定义手机号验证
+        var checkMobile = (rule, value, callback) => {
+            const regMobile = /^(0|86|17951)?(13[0-9]|15[012356789]|17[3678]|18[0-9]|14[57])[0-9]{8}$/;
+            if (regMobile.test(value)) {
+                return callback();
+            }
+            callback(new Error("请输入合法的手机号"));
+        };
         return {
-            query: {
+            searchForm:{
+                account:'',
+                roleName:'',
+                userStatus:''
+            },
+            pageInfo: {
                 name: '',
                 pageIndex: 1,
                 pageSize: 10
             },
+            addOrEdit:'', // 新增或者编辑用户
             loading: false,
-            MissionTemplateForm: {
-                category: ''
-            },
             tableData: [],
             multipleSelection: [],
             delList: [],
             editVisible: false,
-            pageTotal: 0,
-            form: {},
+            pageTotal: 0, // 总条数
+            editForm: {
+                user_name:'',
+                password:'',
+                role_name:'',
+                is_super:'',
+                nick_name:'',
+                phone_no:'',
+                status: '',
+                remark:''
+            },
+            editFormRules:{
+                user_name: [
+                    { required: true, message: '请输入用户名', trigger: 'blur' },
+                    { max: 40, message: '请输入40位以内用户名', trigger: 'blur' }
+                ],
+                password: [
+                    { required: true, message: '请输入密码', trigger: 'blur' },
+                    { min: 6, max: 64, message: '请输入6-64位密码', trigger: 'blur' }
+                ],
+                role_id: [
+                    { required: true, message: '请输入角色名称', trigger: 'change' },
+                ],
+                is_super: [
+                    { required: true, message: '请选择是否是超级管理员', trigger: 'change' },
+                ],
+                nick_name: [
+                    { required: true, message: '请输入登录账号', trigger: 'blur' },
+                ],
+                phone_no: [
+                    { required: true, message: '请输入手机号', trigger: 'blur' },
+                    {
+                        validator: checkMobile,
+                        trigger: "blur",
+                    },
+                ],
+                status: [
+                    { required: true, message: '请选择状态', trigger: 'change' },
+                ],
+                remark: [
+                    { required: true, message: '请填写备注', trigger: 'blur' },
+                ],
+            },
             idx: -1,
             id: -1,
-            categoryOptions: [{ key: '0', name: '请选择' }],
+            roleNameOptions: [],
+            userStatusOptions: [],
+            isSuperOptions:[
+                { key: '1', name: '是' },
+                { key: '0', name: '否' }
+            ],
             tableData2: [
                 {
-                    all_num: '200码',
-                    use_num: '100码',
-                    name: '日本进口方格1',
-                    tag: ['棉', '卡通', '花纹'],
-                    type: '方格',
-                    code: 11
+                    "id": 1,
+                    "user_name": "admin",
+                    "nick_name": "admin",
+                    "phone_no": "1314567890",
+                    "remark": "我是备注我是备注我是备注我是备注",
+                    "status": 1,
+                    "role_id": 1,
+                    "last_login_time": "2020-08-12 17:15:40",
+                    "login_ip": "192.168.1.186",
+                    "created_time": "2020-08-05 10:04:09",
+                    "updated_time": "2020-08-06 15:16:41",
+                    "role_name": "角色1"
                 },
                 {
-                    all_num: '200码',
-                    use_num: '100码',
-                    name: '日本进口方格2',
-                    tag: ['棉', '卡通', '花纹'],
-                    type: '方格',
-                    code: 11
+                    "id": 2,
+                    "user_name": "admin",
+                    "nick_name": "admin",
+                    "phone_no": "1314567890",
+                    "remark": "我是备注我是备注我是备注我是备注",
+                    "status": 0,
+                    "role_id": 0,
+                    "last_login_time": "2020-08-12 17:15:40",
+                    "login_ip": "192.168.1.186",
+                    "created_time": "2020-08-05 10:04:09",
+                    "updated_time": "2020-08-06 15:16:41",
+                    "role_name": "角色1"
+                },{
+                    "id": 3,
+                    "user_name": "admin",
+                    "nick_name": "admin",
+                    "phone_no": "1314567890",
+                    "remark": "我是备注我是备注我是备注我是备注",
+                    "status": 0,
+                    "role_id": 0,
+                    "last_login_time": "2020-08-12 17:15:40",
+                    "login_ip": "192.168.1.186",
+                    "created_time": "2020-08-05 10:04:09",
+                    "updated_time": "2020-08-06 15:16:41",
+                    "role_name": "角色2"
                 },
                 {
-                    all_num: '200码',
-                    use_num: '100码',
-                    name: '日本进口方格3',
-                    tag: ['棉', '卡通', '花纹'],
-                    type: '方格',
-                    code: 11
-                },
-                {
-                    all_num: '200码',
-                    use_num: '100码',
-                    name: '日本进口方格4',
-                    tag: ['棉', '卡通', '花纹'],
-                    type: '方格',
-                    code: 11
-                },
-                {
-                    all_num: '200码',
-                    use_num: '100码',
-                    name: '日本进口方格5',
-                    tag: ['棉', '卡通', '花纹'],
-                    type: '方格',
-                    code: 11
-                },
-                {
-                    all_num: '200码',
-                    use_num: '100码',
-                    name: '日本进口方格6',
-                    tag: ['棉', '卡通', '花纹'],
-                    type: '方格',
-                    code: 11
-                },
-                {
-                    all_num: '200码',
-                    use_num: '100码',
-                    name: '日本进口方7',
-                    tag: ['棉', '卡通', '花纹'],
-                    type: '方格',
-                    code: 11
-                },
-                {
-                    all_num: '200码',
-                    use_num: '100码',
-                    name: '日本进口方8',
-                    tag: ['棉', '卡通', '花纹'],
-                    type: '方格',
-                    code: 18
-                },
-                {
-                    all_num: '200码',
-                    use_num: '100码',
-                    name: '日本进口方9',
-                    tag: ['棉', '卡通', '花纹'],
-                    type: '方格',
-                    code: 19
-                },
-                {
-                    all_num: '200码',
-                    use_num: '100码',
-                    name: '日本进口方10',
-                    tag: ['棉', '卡通', '花纹'],
-                    type: '方格',
-                    code: 20
-                },
-                {
-                    all_num: '200码',
-                    use_num: '100码',
-                    name: '日本进口方11',
-                    tag: ['棉', '卡通', '花纹'],
-                    type: '方格',
-                    code: 21
-                },
-                {
-                    all_num: '200码',
-                    use_num: '100码',
-                    name: '日本进口方12',
-                    tag: ['棉', '卡通', '花纹'],
-                    type: '方格',
-                    code: 22
+                    "id": 9,
+                    "user_name": "test",
+                    "nick_name": "test2222",
+                    "phone_no": "15381912895",
+                    "remark": "我是备注我是备注我是备注我是备注",
+                    "status": 1,
+                    "role_id": 1,
+                    "last_login_time": "1970-01-01 08:00:00",
+                    "login_ip": "0.0.0.0",
+                    "created_time": "2020-08-06 11:19:55",
+                    "updated_time": "2020-08-06 11:21:35",
+                    "role_name": "角色1"
                 }
             ],
-            options: [
-                {
-                    value: 'zhinan',
-                    label: '风格',
-                    children: [
-                        {
-                            value: 'shejiyuanze',
-                            label: '设计原则'
-                        },
-                        {
-                            value: 'daohang',
-                            label: '导航'
-                        }
-                    ]
-                },
-                {
-                    value: 'zujian',
-                    label: '组件',
-                    children: [
-                        {
-                            value: 'basic',
-                            label: 'Basic'
-                        },
-                        {
-                            value: 'form',
-                            label: 'Form'
-                        },
-                        {
-                            value: 'data',
-                            label: 'Data'
-                        },
-                        {
-                            value: 'notice',
-                            label: 'Notice'
-                        },
-                        {
-                            value: 'navigation',
-                            label: 'Navigation'
-                        },
-                        {
-                            value: 'others',
-                            label: 'Others'
-                        }
-                    ]
-                },
-                {
-                    value: 'ziyuan',
-                    label: '资源',
-                    children: [
-                        {
-                            value: 'axure',
-                            label: 'Axure Components'
-                        },
-                        {
-                            value: 'sketch',
-                            label: 'Sketch Templates'
-                        },
-                        {
-                            value: 'jiaohu',
-                            label: '组件交互文档'
-                        }
-                    ]
-                }
-            ]
+            operationalUserInfo:{},
+            operationalUserId:'',
+            operationalIndex:0,
+            changePasswordVisible:false,   // 修改密码 弹窗是否显示
+            changePasswordForm:{
+                password:'',
+                passwordSure:''
+            },
+            changePasswordRules:{
+                password: [
+                    { required: true, message: '请输入密码', trigger: 'blur' },
+                    { min: 6, max: 64, message: '请输入6-64位密码', trigger: 'blur' }
+                ],
+                passwordSure: [
+                    { required: true, message: '请输入密码', trigger: 'blur' },
+                    { min: 6, max: 64, message: '请输入6-64位密码', trigger: 'blur' }
+                ]
+            }
         };
     },
     created() {
         this.getData();
-        this.categoryOptions = [
-            { key: '1', name: '分类1' },
-            { key: '2', name: '分类2' }
+        this.roleNameOptions = [
+            { key: '1', name: '角色1' },
+            { key: '2', name: '角色2' }
+        ];
+        this.userStatusOptions = [
+            { key: '1', name: '启用' },
+            { key: '2', name: '停用' }
         ];
     },
     mounted() {
-        // this.MissionTemplateForm.category = this.categoryOptions[0].name;
+
     },
     methods: {
         // 获取 easy-mock 的模拟数据
         getData() {
-            fetchData(this.query).then(res => {
+            fetchData(this.pageInfo).then(res => {
                 console.log(res);
                 // this.tableData = res.list;
                 // this.pageTotal = res.pageTotal || 50;
                 this.tableData = this.tableData2;
-                this.pageTotal = 12;
+                this.pageTotal = 2;
             });
         },
+
         // 触发搜索按钮
-        handleSearch() {
-            this.$set(this.query, 'pageIndex', 1);
+        handleSearch(formName) {
+            this.$refs[formName].validate((valid) => {
+                if (valid) {
+                    let params = this.searchForm;
+                    console.log('params', params);
+                    //ajax`
+                } else {
+                    return false;
+                }
+            });
+            this.$set(this.pageInfo, 'pageIndex', 1);
             this.getData();
         },
         addPage() {
@@ -342,52 +359,102 @@ export default {
             this.$router.push({ path: '/test', query: { pid: '1' } });
         },
         testPage() {
-            // this.$route.query
+            // this.$route.pageInfo
             this.$router.push({ path: '/test', query: { pid: '2' } });
-        },
-        // 删除操作
-        handleDelete(index, row) {
-            // 二次确认删除
-            this.$confirm('确定要删除吗？', '提示', {
-                type: 'warning'
-            })
-                .then(() => {
-                    this.$message.success('删除成功');
-                    this.tableData.splice(index, 1);
-                })
-                .catch(() => {});
-        },
-        // 多选操作
-        handleSelectionChange(val) {
-            this.multipleSelection = val;
-        },
-        delAllSelection() {
-            const length = this.multipleSelection.length;
-            let str = '';
-            this.delList = this.delList.concat(this.multipleSelection);
-            for (let i = 0; i < length; i++) {
-                str += this.multipleSelection[i].name + ' ';
-            }
-            this.$message.error(`删除了${str}`);
-            this.multipleSelection = [];
         },
         // 编辑操作
         handleEdit(index, row) {
+            this.addOrEdit = 'edit';
             this.idx = index;
-            this.form = row;
+            this.editForm = Object.assign({}, row);
+            if(row.status > 0){
+                this.editForm.status = '1';
+            }else {
+                this.editForm.status = '2';
+            }
+            if(row.role_name === '超级管理员'){
+                this.editForm.is_super = '1';
+            }else {
+                this.editForm.is_super = '0';
+            }
+            this.editForm.role_id = row.role_id.toString();
             this.editVisible = true;
         },
         // 保存编辑
-        saveEdit() {
-            this.editVisible = false;
-            this.$message.success(`修改第 ${this.idx + 1} 行成功`);
-            this.$set(this.tableData, this.idx, this.form);
+        saveEdit(formName) {
+            this.$refs[formName].validate((valid) => {
+                if (valid) {
+                    let params = this.editForm;
+                    console.log('params', params);
+                    //ajax`
+                } else {
+                    alert('验证失败')
+                    return false;
+                }
+            });
+            // this.editVisible = false;
+            // this.$message.success(`修改第 ${this.idx + 1} 行成功`);
+            // this.$set(this.tableData, this.idx, this.form);
         },
         // 分页导航
         handlePageChange(val) {
-            this.$set(this.query, 'pageIndex', val);
+            this.$set(this.pageInfo, 'pageIndex', val);
             this.getData();
-        }
+        },
+        // 重置
+        resetForm(formName) {
+            this.$refs[formName].resetFields();
+        },
+        // 添加用户
+        addUser(){
+            this.addOrEdit = 'add';
+            this.$nextTick(() => {
+                this.$refs['editForm'].resetFields();
+            });
+            this.editVisible = true;
+        },
+        //  启用操作
+        handleEnable(index, row){
+            this.operationalUserId = row.id;
+            this.operationalIndex = index;
+            this.changeUserStatus();
+        },
+        // 停用操作
+        handleStop(index, row) {
+            // 二次确认删除
+            this.$confirm('确定要停用该用户吗？', '', {
+                customClass: 'message-delete',
+                type: 'warning',
+                center: true
+            })
+                .then(() => {
+                    this.changeUserStatus();
+                    // this.tableData.splice(index, 1);
+                })
+                .catch(() => {});
+        },
+        // 改变用户使用状态
+        changeUserStatus(){
+            // ajax
+            // this.$message.success('停用成功');
+            console.log('this.tableData', this.tableData[this.operationalIndex].status);
+            let newStatus = 0;
+            if(this.tableData[this.operationalIndex].status === 0){
+                newStatus = 1
+            }
+            this.$set(this.tableData[this.operationalIndex], 'status', newStatus);
+        },
+        // 修改密码
+        changePassword(index,row){
+            this.operationalIndex = index;
+            this.operationalUserInfo = row;
+            this.changePasswordVisible = true;
+            // this.$refs['changePasswordForm'].resetFields();
+        },
+        savePassword(){
+            this.changePasswordVisible = false;
+        },
+
     }
 };
 </script>
