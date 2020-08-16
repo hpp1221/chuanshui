@@ -60,10 +60,10 @@
                 :visible.sync="authorityForm.visible"
                 width="30%"
             >
-                <el-form ref="authorityForm" :model="authorityForm" :rules="authorityFormRules">
+                <el-form ref="authorityForm" :model="authorityForm.currentItem" :rules="authorityFormRules">
                     <el-form-item label="父类" prop="parentClass">
                         <el-select
-                            v-model="authorityForm.parentClass"
+                            v-model="authorityForm.currentItem.parentClass"
                             placeholder="请选择"
                             style="width:100%"
                         >
@@ -169,7 +169,7 @@ export default {
                 currentItem: {
                     parentClass: '',
                     name: '',
-                    rouer: '',
+                    router: '',
                     authorityName: ''
                 }
             },
@@ -178,28 +178,28 @@ export default {
                     {
                         required: true,
                         message: '请选择',
-                        trigger: 'blur'
+                        trigger: 'change' 
                     }
                 ],
                 name: [
                     {
                         required: true,
                         message: '请输入',
-                        trigger: 'blur'
+                        trigger: 'blur' 
                     }
                 ],
                 router: [
                     {
                         required: true,
                         message: '请输入',
-                        trigger: 'blur'
+                        trigger: 'blur' 
                     }
                 ],
                 authorityName: [
                     {
                         required: true,
                         message: '请输入',
-                        trigger: 'blur'
+                        trigger: 'blur' 
                     }
                 ]
             }
@@ -244,6 +244,7 @@ export default {
         },
         //权限新建和编辑弹窗确定
         handleSureAuthorityModal(formName) {
+            console.log('er',formName,this.authorityForm)
             this.$refs[formName].validate((valid) => {
                 if (valid) {
                     this.$set(this.authorityForm, 'visible', false);
@@ -252,7 +253,7 @@ export default {
                     return false;
                 }
             });
-        }
+        },
     }
 };
 </script>
