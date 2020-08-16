@@ -163,7 +163,7 @@ export default {
             this.$set(this.stockModalInfo, 'visible', visible);
         },
         //打开操作记录弹出框
-        handleOperateRecord() {
+        handleOperateRecord(index,row) {
             this.recordModalInfo = Object.assign({}, this.recordModalInfo, { currentItem: row, visible: true });
         },
         //修改库存记录关闭回调

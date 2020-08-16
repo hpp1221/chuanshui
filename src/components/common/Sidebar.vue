@@ -101,6 +101,10 @@ export default {
                         {
                             index: 'user-list',
                             title: '用户管理'
+                        },
+                          {
+                            index: 'parameter-configuration',
+                            title: '参数配置'
                         }
                     ]
                 }

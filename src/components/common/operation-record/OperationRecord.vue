@@ -1,24 +1,22 @@
 <template>
     <el-dialog
-        title="修改库存"
+        title="操作记录"
         :visible.sync="recordModalInfo.visible"
         width="35%"
         :destroy-on-close="true"
         append-to-body
     >
-        <el-table
-            v-loading="loading"
-            :data="tableData"
-            ref="multipleTable"
-            tooltip-effect="dark"
-            @selection-change="handleSelectionChange"
-        >
+        <el-form :inline="true">
+            <el-form-item label="产品编号:">???</el-form-item>
+            <el-form-item label="货架编码:">???</el-form-item>
+        </el-form>
+        <el-table v-loading="loading" :data="tableData" ref="multipleTable" tooltip-effect="dark">
             <el-table-column prop="operationer" label="操作员"></el-table-column>
             <el-table-column prop="operationType" label="操作类型"></el-table-column>
             <el-table-column prop="count" label="数量"></el-table-column>
             <el-table-column prop="operationCount" label="操作后数量"></el-table-column>
-             <el-table-column prop="reason" label="理由"></el-table-column>
-              <el-table-column prop="commit" label="备注"></el-table-column>
+            <el-table-column prop="reason" label="理由"></el-table-column>
+            <el-table-column prop="commit" label="备注"></el-table-column>
         </el-table>
         <span slot="footer" class="dialog-footer">
             <el-button @click="handleCloseRecordModal">取 消</el-button>
@@ -33,7 +31,8 @@ export default {
     props: ['recordModalInfo'],
     data() {
         return {
-            tableData:[]
+            tableData: [],
+            loading: false
         };
     },
     methods: {

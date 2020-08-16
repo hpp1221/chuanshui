@@ -61,6 +61,12 @@ export default new Router({
                     meta: { title: '用户管理' }
                 },
                 {
+                    path: '/parameter-configuration',
+                    component: () =>
+                        import(/* webpackChunkName: "table" */ '../components/page/system-settings/parameter-configuration/ParameterConfiguration'),
+                    meta: { title: '参数配置' }
+                },
+                {
                     path: '/tabs',
                     component: () => import(/* webpackChunkName: "tabs" */ '../components/page/Tabs.vue'),
                     meta: { title: 'tab选项卡' }

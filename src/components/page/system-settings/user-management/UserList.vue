@@ -63,6 +63,45 @@
                     @current-change="handlePageChange"
                 ></el-pagination>
             </div>
+        </div><div class="container m-t-16 p-t-0">
+            <div class="global-table-title">
+                <div class="title">
+                    <i></i>
+                    <span>产品列表</span>
+                </div>
+                <el-button type="primary" @click="addPage">新增产品</el-button>
+            </div>
+            <el-table v-loading="loading" :data="tableData2" ref="multipleTable">
+                <!--                <el-table-column type="selection" width="55" align="center"></el-table-column>-->
+                <el-table-column prop="code" label="编号" width="75" align="center"></el-table-column>
+                <el-table-column prop="name" label="产品名称"></el-table-column>
+                <el-table-column prop="type" label="产品">
+                    <!--                    <template slot-scope="scope">￥{{scope.row.money}}</template>-->
+                </el-table-column>
+                <el-table-column prop="all_num" label="总库存"></el-table-column>
+                <el-table-column prop="use_num" label="可用库存"></el-table-column>
+                <el-table-column label="操作" width="180" align="center">
+                    <template slot-scope="scope">
+                        <el-button type="text" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                        <el-button type="text" @click="handleDelete(scope.$index, scope.row)">查看</el-button>
+                        <el-button type="text" @click="handleDelete(scope.$index, scope.row)">锁定</el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+            <div class="pagination pos-relative">
+                <div class="aa">11111</div>
+                <div class="pos-absolute">
+                    <el-button type="success" @click="addPage">打印标贴</el-button>
+                </div>
+                <el-pagination
+                    background
+                    layout="total, prev, pager, next"
+                    :current-page="query.pageIndex"
+                    :page-size="query.pageSize"
+                    :total="pageTotal"
+                    @current-change="handlePageChange"
+                ></el-pagination>
+            </div>
         </div>
 
         <!-- 编辑弹出框 -->
