@@ -61,6 +61,30 @@ export default new Router({
                     meta: { title: '用户管理' }
                 },
                 {
+                    path: '/parameter-configuration',
+                    component: () =>
+                        import(/* webpackChunkName: "table" */ '../components/page/system-settings/parameter-configuration/ParameterConfiguration'),
+                    meta: { title: '参数配置' }
+                },
+                {
+                    path: '/authority-management',
+                    component: () =>
+                        import(/* webpackChunkName: "table" */ '../components/page/system-settings/authority-management/AuthorityManagement'),
+                    meta: { title: '权限管理' }
+                },
+                {
+                    path: '/role-management',
+                    component: () =>
+                        import(/* webpackChunkName: "table" */ '../components/page/system-settings/role-management/RoleManagement'),
+                    meta: { title: '角色管理' }
+                },
+                {
+                    path:'/add-role',
+                    component: () =>
+                        import(/* webpackChunkName: "table" */ '../components/page/system-settings/role-management/OperationRoleModule'),
+                    meta: { title: '新建角色' }
+                },
+                {
                     path: '/tabs',
                     component: () => import(/* webpackChunkName: "tabs" */ '../components/page/Tabs.vue'),
                     meta: { title: 'tab选项卡' }

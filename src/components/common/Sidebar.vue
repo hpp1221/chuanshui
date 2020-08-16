@@ -101,6 +101,18 @@ export default {
                         {
                             index: 'user-list',
                             title: '用户管理'
+                        },
+                          {
+                            index: 'parameter-configuration',
+                            title: '参数配置'
+                        },
+                        {
+                            index:'authority-management',
+                            title:'权限管理'
+                        },
+                        {
+                            index:'role-management',
+                            title:'角色管理'
                         }
                     ]
                 }
