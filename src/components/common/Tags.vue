@@ -115,7 +115,7 @@
 <style>
     .tags {
         position: relative;
-        height: 30px;
+        height: 40px;
         overflow: hidden;
         background: #fff;
         padding-right: 120px;
@@ -130,14 +130,13 @@
 
     .tags-li {
         float: left;
-        margin: 3px 5px 2px 3px;
-        border-radius: 3px;
+        margin: 6px 10px 0 10px;
         font-size: 12px;
         overflow: hidden;
         cursor: pointer;
-        height: 23px;
-        line-height: 23px;
-        border: 1px solid #e9eaec;
+        height: 34px;
+        line-height: 34px;
+        border-radius: 10px 10px 0px 0px;
         background: #fff;
         padding: 0 5px 0 12px;
         vertical-align: middle;
