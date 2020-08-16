@@ -105,6 +105,14 @@ export default {
                           {
                             index: 'parameter-configuration',
                             title: '参数配置'
+                        },
+                        {
+                            index:'authority-management',
+                            title:'权限管理'
+                        },
+                        {
+                            index:'role-management',
+                            title:'角色管理'
                         }
                     ]
                 }
