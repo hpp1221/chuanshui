@@ -43,8 +43,9 @@
                 </el-table-column>
                 <el-table-column prop="status" label="用户状态">
                     <template scope="scope">
-                        <span v-if="scope.row.status===0" style="color:red;">停用</span>
-                        <span v-if="scope.row.status===1" style="color:green;">使用中</span>
+                        <span class="status-ball" :class="scope.row.status===1?'color-success':'color-err'"></span>
+                        <span v-if="scope.row.status===0" class="font-stop">停用</span>
+                        <span v-if="scope.row.status===1" class="font-use">使用中</span>
                     </template>
                 </el-table-column>
                 <el-table-column prop="phone_no" label="手机号"></el-table-column>
@@ -77,14 +78,14 @@
                 </el-table-column>
             </el-table>
             <div class="pagination pos-relative">
-                <div class="pos-absolute">
+                <!--<div class="pos-absolute">
                     <el-button type="success" @click="addPage">打印标贴</el-button>
-                </div>
+                </div>-->
                 <el-pagination
                     background
                     layout="total, prev, pager, next"
-                    :current-page="query.pageIndex"
-                    :page-size="query.pageSize"
+                    :current-page="pageInfo.pageIndex"
+                    :page-size="pageInfo.pageSize"
                     :total="pageTotal"
                     @current-change="handlePageChange"
                 ></el-pagination>
@@ -160,13 +161,21 @@ import './UserList.less';
 export default {
     name: 'userList',
     data() {
+        // 自定义手机号验证
+        var checkMobile = (rule, value, callback) => {
+            const regMobile = /^(0|86|17951)?(13[0-9]|15[012356789]|17[3678]|18[0-9]|14[57])[0-9]{8}$/;
+            if (regMobile.test(value)) {
+                return callback();
+            }
+            callback(new Error("请输入合法的手机号"));
+        };
         return {
             searchForm:{
                 account:'',
                 roleName:'',
                 userStatus:''
             },
-            query: {
+            pageInfo: {
                 name: '',
                 pageIndex: 1,
                 pageSize: 10
@@ -197,17 +206,21 @@ export default {
                     { required: true, message: '请输入密码', trigger: 'blur' },
                     { min: 6, max: 64, message: '请输入6-64位密码', trigger: 'blur' }
                 ],
-                role_name: [
+                role_id: [
                     { required: true, message: '请输入角色名称', trigger: 'change' },
                 ],
                 is_super: [
-                    { required: true, message: '请选择是否超级管理员', trigger: 'change' },
+                    { required: true, message: '请选择是否是超级管理员', trigger: 'change' },
                 ],
                 nick_name: [
                     { required: true, message: '请输入登录账号', trigger: 'blur' },
                 ],
                 phone_no: [
                     { required: true, message: '请输入手机号', trigger: 'blur' },
+                    {
+                        validator: checkMobile,
+                        trigger: "blur",
+                    },
                 ],
                 status: [
                     { required: true, message: '请选择状态', trigger: 'change' },
@@ -222,7 +235,7 @@ export default {
             userStatusOptions: [],
             isSuperOptions:[
                 { key: '1', name: '是' },
-                { key: '2', name: '否' }
+                { key: '0', name: '否' }
             ],
             tableData2: [
                 {
@@ -237,7 +250,7 @@ export default {
                     "login_ip": "192.168.1.186",
                     "created_time": "2020-08-05 10:04:09",
                     "updated_time": "2020-08-06 15:16:41",
-                    "role_name": "admin"
+                    "role_name": "角色1"
                 },
                 {
                     "id": 2,
@@ -251,7 +264,7 @@ export default {
                     "login_ip": "192.168.1.186",
                     "created_time": "2020-08-05 10:04:09",
                     "updated_time": "2020-08-06 15:16:41",
-                    "role_name": "admin"
+                    "role_name": "角色1"
                 },{
                     "id": 3,
                     "user_name": "admin",
@@ -264,7 +277,7 @@ export default {
                     "login_ip": "192.168.1.186",
                     "created_time": "2020-08-05 10:04:09",
                     "updated_time": "2020-08-06 15:16:41",
-                    "role_name": "admin"
+                    "role_name": "角色2"
                 },
                 {
                     "id": 9,
@@ -278,7 +291,7 @@ export default {
                     "login_ip": "0.0.0.0",
                     "created_time": "2020-08-06 11:19:55",
                     "updated_time": "2020-08-06 11:21:35",
-                    "role_name": "admin"
+                    "role_name": "角色1"
                 }
             ],
             operationalUserInfo:{},
@@ -318,7 +331,7 @@ export default {
     methods: {
         // 获取 easy-mock 的模拟数据
         getData() {
-            fetchData(this.query).then(res => {
+            fetchData(this.pageInfo).then(res => {
                 console.log(res);
                 // this.tableData = res.list;
                 // this.pageTotal = res.pageTotal || 50;
@@ -338,7 +351,7 @@ export default {
                     return false;
                 }
             });
-            this.$set(this.query, 'pageIndex', 1);
+            this.$set(this.pageInfo, 'pageIndex', 1);
             this.getData();
         },
         addPage() {
@@ -346,21 +359,32 @@ export default {
             this.$router.push({ path: '/test', query: { pid: '1' } });
         },
         testPage() {
-            // this.$route.query
+            // this.$route.pageInfo
             this.$router.push({ path: '/test', query: { pid: '2' } });
         },
         // 编辑操作
         handleEdit(index, row) {
             this.addOrEdit = 'edit';
             this.idx = index;
-            this.form = row;
+            this.editForm = Object.assign({}, row);
+            if(row.status > 0){
+                this.editForm.status = '1';
+            }else {
+                this.editForm.status = '2';
+            }
+            if(row.role_name === '超级管理员'){
+                this.editForm.is_super = '1';
+            }else {
+                this.editForm.is_super = '0';
+            }
+            this.editForm.role_id = row.role_id.toString();
             this.editVisible = true;
         },
         // 保存编辑
         saveEdit(formName) {
             this.$refs[formName].validate((valid) => {
                 if (valid) {
-                    let params = this.searchForm;
+                    let params = this.editForm;
                     console.log('params', params);
                     //ajax`
                 } else {
@@ -370,11 +394,11 @@ export default {
             });
             // this.editVisible = false;
             // this.$message.success(`修改第 ${this.idx + 1} 行成功`);
-            this.$set(this.tableData, this.idx, this.form);
+            // this.$set(this.tableData, this.idx, this.form);
         },
         // 分页导航
         handlePageChange(val) {
-            this.$set(this.query, 'pageIndex', val);
+            this.$set(this.pageInfo, 'pageIndex', val);
             this.getData();
         },
         // 重置
@@ -384,6 +408,9 @@ export default {
         // 添加用户
         addUser(){
             this.addOrEdit = 'add';
+            this.$nextTick(() => {
+                this.$refs['editForm'].resetFields();
+            });
             this.editVisible = true;
         },
         //  启用操作

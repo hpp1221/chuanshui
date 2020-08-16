@@ -1,7 +1,7 @@
 <template>
     <el-dialog
         title="修改库存"
-        :visible.sync="recordInfo.visible"
+        :visible.sync="stockModalInfo.visible"
         width="35%"
         :destroy-on-close="true"
         append-to-body
@@ -41,8 +41,8 @@
             </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
-            <el-button @click="handleCloseRecordModal">取 消</el-button>
-            <el-button type="primary" @click="handleSureRecordModal">确 定</el-button>
+            <el-button @click="handleCloseStockModal">取 消</el-button>
+            <el-button type="primary" @click="handleSureStockModal">确 定</el-button>
         </span>
     </el-dialog>
 </template>
@@ -50,7 +50,7 @@
 import './ModificationStock.less';
 export default {
     name: 'ModificationStock',
-    props: ['recordInfo'],
+    props: ['stockModalInfo'],
     data() {
         return {
             stockForm: {
@@ -64,16 +64,15 @@ export default {
         };
     },
     mounted() {
-        console.log('props', this.props);
     },
     methods: {
         //修改库存弹出关闭
-        handleCloseRecordModal() {
-            this.$emit('handleCloseRecordModal', false);
+        handleCloseStockModal() {
+            this.$emit('handleCloseStockModal', false);
         },
         //修改库存弹出确定
-        handleSureRecordModal() {
-            this.$emit('handleSureRecordModal', false);
+        handleSureStockModal() {
+            this.$emit('handleSureStockModal', false);
         }
     }
 };
