@@ -68,7 +68,11 @@ export default {
                         {
                             index: 'product-category',
                             title: '产品分类'
-                        }
+                        },
+                        {
+                            index: 'product-label',
+                            title: '产品标签'
+                        },
                     ]
                 },
                 {

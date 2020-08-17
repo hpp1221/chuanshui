@@ -45,6 +45,12 @@ export default new Router({
                     meta: { title: '产品分类' }
                 },
                 {
+                    path: '/product-label',
+                    component: () =>
+                        import(/* webpackChunkName: "table" */ '../components/page/cargo-management/product-label/ProductLabel.vue'),
+                    meta: { title: '产品标签' }
+                },
+                {
                     path: '/shelf-list',
                     component: () => import(/* webpackChunkName: "table" */ '../components/page/shelf-management/shelf-list/ShelfList.vue'),
                     meta: { title: '货架列表' }

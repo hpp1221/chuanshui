@@ -68,7 +68,7 @@
                 </el-table-column>
                 <el-table-column prop="updated_time" label="最后登录时间"></el-table-column>
                 <el-table-column prop="created_time" label="创建时间"></el-table-column>
-                <el-table-column label="操作" width="180" align="center">
+                <el-table-column label="操作" width="180">
                     <template slot-scope="scope">
                         <el-button type="text" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
                         <el-button type="text" @click="changePassword(scope.$index, scope.row)">修改密码</el-button>
@@ -450,6 +450,7 @@ export default {
         editClose(){
             console.log('11111');
             this.$refs['editForm'].resetFields();
+            // this.$refs['editForm'].clearValidate();
             this.editVisible = false;
         }
 
