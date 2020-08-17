@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="container m-t-16 p-t-0">
+        <div class="container m-t-16 p-t-0 role-container">
             <div class="global-table-title">
                 <div class="title">
                     <i></i>
@@ -12,7 +12,7 @@
             <el-table v-loading="loading" :data="tableData" ref="multipleTable">
                 <el-table-column prop="roleName" label="角色名称"></el-table-column>
                 <el-table-column prop="desc" label="描述"></el-table-column>
-                <el-table-column label="操作" width="180" align="center">
+                <el-table-column label="操作" width="200" align="center">
                     <template slot-scope="scope">
                         <el-button type="text" @click="handleSave(scope.$index, scope.row)">编辑</el-button>
                         <el-button

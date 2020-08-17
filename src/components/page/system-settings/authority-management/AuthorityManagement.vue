@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="container m-t-16 p-t-0">
+        <div class="container m-t-16 p-t-0 author-container">
             <div class="global-table-title">
                 <div class="title">
                     <i></i>
@@ -27,14 +27,14 @@
                 </el-table-column>
                 <el-table-column prop="name" label="别名"></el-table-column>
                 <el-table-column prop="router" label="路由"></el-table-column>
-                <el-table-column label="操作" width="180">
+                <el-table-column label="操作" width="200">
                     <template slot-scope="scope">
                         <el-button
                             type="text"
                             v-if="scope.row.children"
                             @click="handleCreateChildNode(scope.$index, scope.row)"
                         >新建下级</el-button>
-                        <el-button type="text" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                        <el-button type="text" class="edit-author" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
                         <el-button
                             type="text"
                             class="delete-color"
@@ -60,7 +60,11 @@
                 :visible.sync="authorityForm.visible"
                 width="30%"
             >
-                <el-form ref="authorityForm" :model="authorityForm.currentItem" :rules="authorityFormRules">
+                <el-form
+                    ref="authorityForm"
+                    :model="authorityForm.currentItem"
+                    :rules="authorityFormRules"
+                >
                     <el-form-item label="父类" prop="parentClass">
                         <el-select
                             v-model="authorityForm.currentItem.parentClass"
@@ -96,7 +100,6 @@
 </template>
 <script>
 import './AuthorityManagement.less';
-
 export default {
     name: 'AuthorityManagement',
     data() {
@@ -178,28 +181,28 @@ export default {
                     {
                         required: true,
                         message: '请选择',
-                        trigger: 'change' 
+                        trigger: 'change'
                     }
                 ],
                 name: [
                     {
                         required: true,
                         message: '请输入',
-                        trigger: 'blur' 
+                        trigger: 'blur'
                     }
                 ],
                 router: [
                     {
                         required: true,
                         message: '请输入',
-                        trigger: 'blur' 
+                        trigger: 'blur'
                     }
                 ],
                 authorityName: [
                     {
                         required: true,
                         message: '请输入',
-                        trigger: 'blur' 
+                        trigger: 'blur'
                     }
                 ]
             }
@@ -244,7 +247,7 @@ export default {
         },
         //权限新建和编辑弹窗确定
         handleSureAuthorityModal(formName) {
-            console.log('er',formName,this.authorityForm)
+            console.log('er', formName, this.authorityForm);
             this.$refs[formName].validate((valid) => {
                 if (valid) {
                     this.$set(this.authorityForm, 'visible', false);
@@ -253,7 +256,7 @@ export default {
                     return false;
                 }
             });
-        },
+        }
     }
 };
 </script>
