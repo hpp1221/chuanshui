@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="user-container">
         <div class="container clearfix">
             <el-form :model="searchForm" :inline="true" ref="searchForm" label-width="80px">
                 <el-form-item label="登录账户:" prop="account">
@@ -68,10 +68,10 @@
                 </el-table-column>
                 <el-table-column prop="updated_time" label="最后登录时间"></el-table-column>
                 <el-table-column prop="created_time" label="创建时间"></el-table-column>
-                <el-table-column label="操作" width="180">
+                <el-table-column label="操作" width="200">
                     <template slot-scope="scope">
                         <el-button type="text" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-                        <el-button type="text" @click="changePassword(scope.$index, scope.row)">修改密码</el-button>
+                        <el-button type="text" class="update-password" @click="changePassword(scope.$index, scope.row)">修改密码</el-button>
                         <el-button v-show="scope.row.status===1" type="text" @click="handleStop(scope.$index, scope.row)">停用</el-button>
                         <el-button v-show="scope.row.status===0" type="text" @click="handleEnable(scope.$index, scope.row)">启用</el-button>
                     </template>
