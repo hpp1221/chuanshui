@@ -1,6 +1,6 @@
 <template>
     <div class="product-category-page">
-        <div class="container m-t-16 p-t-0">
+        <div class="container p-t-0">
             <div class="global-table-title">
                 <div class="title">
                     <i></i>
@@ -213,6 +213,7 @@ export default {
 
             if (row.is_first) {
                 this.formTitle = '编辑大类';
+                this.parentsCategoryShow = false;
             } else {
                 this.formTitle = '编辑下级';
                 this.parentsCategoryShow = true;

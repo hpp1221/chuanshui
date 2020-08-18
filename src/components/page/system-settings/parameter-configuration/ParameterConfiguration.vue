@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="parameter-config-container">
         <div class="container m-t-16 p-t-0">
             <div class="global-table-title">
                 <div class="title">
@@ -12,6 +12,17 @@
                 <el-table-column prop="code" label="编号" width="75" align="center"></el-table-column>
                 <el-table-column prop="parameterName" label="参数名称"></el-table-column>
                 <el-table-column prop="remarks" label="备注"></el-table-column>
+                <el-table-column prop="remarks" label="备注">
+                    <template scope="scope">
+                        <el-tooltip placement="top" effect="light" popper-class="tooltip-remark">
+                            <div slot="content" class="remark-box">
+                                <div class="remark-title">备注</div>
+                                <div class="remark-content">{{scope.row.remarks}}</div>
+                            </div>
+                            <i class="el-icon-warning cursor-class"></i>
+                        </el-tooltip>
+                    </template>
+                </el-table-column>
                 <el-table-column prop="parameterValue" label="参数值">
                     <template slot-scope="scope">
                         <el-input size="mini" placeholder="请输入" v-model="scope.row.parameterValue"></el-input>

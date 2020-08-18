@@ -51,11 +51,11 @@ export default {
                     index: 'dashboard',
                     title: '系统首页'
                 },
-                {
+                /*{
                     icon: 'el-icon-lx-cascades',
                     index: 'table',
                     title: '基础表格'
-                },
+                },*/
                 {
                     icon: 'el-icon-rank',
                     index: 'cargo',
@@ -65,14 +65,14 @@ export default {
                             index: 'product-list',
                             title: '产品列表'
                         },
-                        {
+                        /*{
                             index: 'product-category',
                             title: '产品分类'
                         },
                         {
                             index: 'product-label',
                             title: '产品标签'
-                        },
+                        },*/
                     ]
                 },
                 {
@@ -114,10 +114,10 @@ export default {
                             index:'authority-management',
                             title:'权限管理'
                         },
-                        {
+                        /*{
                             index:'role-management',
                             title:'角色管理'
-                        }
+                        }*/
                     ]
                 }
                 /*{

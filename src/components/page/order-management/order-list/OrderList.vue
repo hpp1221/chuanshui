@@ -1,13 +1,13 @@
-<template>
+<!--<template>
     <div>
         <div class="container clearfix">
             <div class="handle-box">
-                <!--<el-button
+                &lt;!&ndash;<el-button
                         type="primary"
                         icon="el-icon-delete"
                         class="handle-del mr10"
                         @click="delAllSelection"
-                >批量删除</el-button>-->
+                >批量删除</el-button>&ndash;&gt;
                 <span class="input-title">产品名称：</span>
                 <el-input v-model="query.name" placeholder="请输入" class="handle-input mr10"></el-input>
                 <span class="input-title">产品分类：</span>
@@ -22,8 +22,8 @@
                     :props="{ multiple: true }"
                     filterable
                 ></el-cascader>
-                <!--<el-button type="primary" icon="el-icon-search" @click="addPage">添加</el-button>
-                <el-button type="primary" icon="el-icon-search" @click="testPage">测试啊</el-button>-->
+                &lt;!&ndash;<el-button type="primary" icon="el-icon-search" @click="addPage">添加</el-button>
+                <el-button type="primary" icon="el-icon-search" @click="testPage">测试啊</el-button>&ndash;&gt;
             </div>
             <div class="btn-right">
                 <el-button @click="handleSearch">重置</el-button>
@@ -49,7 +49,7 @@
                 <el-table-column prop="code" label="编号" width="75" align="center"></el-table-column>
                 <el-table-column prop="name" label="产品名称"></el-table-column>
                 <el-table-column prop="type" label="产品">
-                    <!--                    <template slot-scope="scope">￥{{scope.row.money}}</template>-->
+                    &lt;!&ndash;                    <template slot-scope="scope">￥{{scope.row.money}}</template>&ndash;&gt;
                 </el-table-column>
                 <el-table-column prop="all_num" label="总库存"></el-table-column>
                 <el-table-column prop="use_num" label="可用库存"></el-table-column>
@@ -77,7 +77,7 @@
             </div>
         </div>
 
-        <!-- 编辑弹出框 -->
+        &lt;!&ndash; 编辑弹出框 &ndash;&gt;
         <el-dialog title="编辑" :visible.sync="editVisible" width="30%">
             <el-form ref="form" :model="form" label-width="70px">
                 <el-form-item label="用户名">
@@ -93,8 +93,10 @@
             </span>
         </el-dialog>
     </div>
+</template>-->
+<template>
+    <div>订单列表</div>
 </template>
-
 <script>
 import { fetchData } from '../../../../api';
 import './OrderList.less';

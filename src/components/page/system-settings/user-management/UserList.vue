@@ -35,11 +35,11 @@
                 <el-table-column prop="id" label="编号" width="75" align="center"></el-table-column>
                 <el-table-column prop="user_name" label="用户名"></el-table-column>
                 <el-table-column prop="nick_name" label="登录账户"></el-table-column>
-                <el-table-column prop="role_id" label="角色名称">
-                    <template scope="scope">
+                <el-table-column prop="role_name" label="角色名称">
+                    <!--<template scope="scope">
                         <span v-show="scope.row.role_id===0">普通用户</span>
                         <span v-show="scope.row.role_id===1">超级管理员</span>
-                    </template>
+                    </template>-->
                 </el-table-column>
                 <el-table-column prop="status" label="用户状态">
                     <template scope="scope">
@@ -154,6 +154,7 @@
 
 <script>
 import { fetchData } from '../../../../api';
+import { Loading } from 'element-ui';
 import './UserList.less';
 export default {
     name: 'userList',
@@ -365,20 +366,20 @@ export default {
             this.editVisible = true;
             this.$nextTick(()=> {
                 // 赋值
-
-                if(row.status > 0){
-                    row.status = '1';
+                let new_row = JSON.parse(JSON.stringify(row));
+                if(new_row.status > 0){
+                    new_row.status = '1';
                 }else {
-                    row.status = '2';
+                    new_row.status = '2';
                 }
-                if(row.role_name === '超级管理员'){
-                    row.is_super = '1';
+                if(new_row.role_name === '超级管理员'){
+                    new_row.is_super = '1';
                 }else {
-                    row.is_super = '0';
+                    new_row.is_super = '0';
                 }
-                row.role_id = row.role_id.toString();
+                new_row.role_id = new_row.role_id.toString();
                 // 触发更新
-                this.editForm = Object.assign({}, this.editForm,row);
+                this.editForm = Object.assign({}, this.editForm,new_row);
             })
         },
         // 保存编辑
@@ -436,6 +437,19 @@ export default {
                 newStatus = 1
             }
             this.$set(this.tableData[this.operationalIndex], 'status', newStatus);
+            let loadingInstance = Loading.service({
+                text: '操作中',
+                background: 'transparent'
+            });
+            setTimeout(() => {
+                loadingInstance.close();
+                this.$notify({
+                    title: '操作成功',
+                    message: '',
+                    type: 'success',
+                    duration: 1000
+                });
+            }, 500);
         },
         // 修改密码
         changePassword(index,row){

@@ -1,5 +1,5 @@
-<template>
-    <div>
+<!--<template>
+    <div class="shelf-container">
         <div class="container clearfix">
             <el-form :model="ruleForm" :inline="true" ref="ruleForm" label-width="60px">
                 <el-form-item label="楼层:" prop="floor">
@@ -68,12 +68,15 @@
             </div>
         </div>
 
-        <!-- 查看货物弹框 -->
+        &lt;!&ndash; 查看货物弹框 &ndash;&gt;
         <ViewShelfModal
             :viewShelfInfo="viewShelfInfo"
             @handleSureModal="handleSureModal"
         ></ViewShelfModal>
     </div>
+</template>-->
+<template>
+    <div>货架列表</div>
 </template>
 
 <script>
