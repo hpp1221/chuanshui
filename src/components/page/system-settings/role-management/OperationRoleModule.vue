@@ -30,7 +30,7 @@
                     <span>权限分配</span>
                 </div>
             </div>
-            <Vue2OrgTree name="test" :data="data" :render-content="renderContent"/>
+            <Vue2OrgTree name="test" :data="data" :render-content="renderContent" :label-class-name="labelClassName"/>
         </div>
     </div>
 </template>
@@ -61,8 +61,8 @@ export default {
                 ]
             },
             data: {
-                id: 0,
-                label: 'XXX科技有限公司',
+                // id: 0,
+                // label: 'XXX科技有限公司',
                 children: [
                     {
                         id: 2,
@@ -83,7 +83,8 @@ export default {
                             {
                                 id: 10,
                                 label: '产品经理'
-                            }
+                            },
+                            
                         ]
                     },
                     {
@@ -125,29 +126,3 @@ export default {
     }
 };
 </script>
-<style type="text/css">
-.org-tree-node-label {
-    white-space: nowrap;
-}
-.bg-white {
-    background-color: white;
-}
-.bg-orange {
-    background-color: orange;
-}
-.bg-gold {
-    background-color: gold;
-}
-.bg-gray {
-    background-color: gray;
-}
-.bg-lightpink {
-    background-color: lightpink;
-}
-.bg-chocolate {
-    background-color: chocolate;
-}
-.bg-tomato {
-    background-color: tomato;
-}
-</style>

@@ -1,6 +1,10 @@
 <!--
 <template>
+<<<<<<< HEAD
     <div class="author-container">
+=======
+    <div>
+>>>>>>> 3c37f1af5e4cecef7b9a8a948fc2a793a746403e
         <div class="container m-t-16 p-t-0">
             <div class="global-table-title">
                 <div class="title">
@@ -28,14 +32,18 @@
                 </el-table-column>
                 <el-table-column prop="name" label="别名"></el-table-column>
                 <el-table-column prop="router" label="路由"></el-table-column>
-                <el-table-column label="操作" width="200">
+                <el-table-column label="操作" width="180">
                     <template slot-scope="scope">
                         <el-button
                             type="text"
                             v-if="scope.row.children"
                             @click="handleCreateChildNode(scope.$index, scope.row)"
                         >新建下级</el-button>
+<<<<<<< HEAD
                         <el-button type="text"  @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+=======
+                        <el-button type="text" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+>>>>>>> 3c37f1af5e4cecef7b9a8a948fc2a793a746403e
                         <el-button
                             type="text"
                             class="delete-color"
@@ -62,12 +70,17 @@
                 :before-close="dialogClose"
                 width="30%"
             >
+<<<<<<< HEAD
                 <el-form
                     ref="authorityForm"
                     :model="authorityForm.currentItem"
                     :rules="authorityFormRules"
                 >
                     <el-form-item label="父类" prop="parentClass" v-if=" (authorityForm.status === 'addChild')|| (authorityForm.status === 'editAuth' && authorityForm.currentItem.level !== 1)">
+=======
+                <el-form ref="authorityForm" :model="authorityForm.currentItem" :rules="authorityFormRules">
+                    <el-form-item label="父类" prop="parentClass">
+>>>>>>> 3c37f1af5e4cecef7b9a8a948fc2a793a746403e
                         <el-select
                             v-model="authorityForm.currentItem.parentClass"
                             placeholder="请选择"
@@ -102,6 +115,7 @@
 </template>
 <script>
 import './AuthorityManagement.less';
+
 export default {
     name: 'AuthorityManagement',
     data() {
@@ -186,28 +200,28 @@ export default {
                     {
                         required: true,
                         message: '请选择',
-                        trigger: 'change'
+                        trigger: 'change' 
                     }
                 ],
                 name: [
                     {
                         required: true,
                         message: '请输入',
-                        trigger: 'blur'
+                        trigger: 'blur' 
                     }
                 ],
                 router: [
                     {
                         required: true,
                         message: '请输入',
-                        trigger: 'blur'
+                        trigger: 'blur' 
                     }
                 ],
                 authorityName: [
                     {
                         required: true,
                         message: '请输入',
-                        trigger: 'blur'
+                        trigger: 'blur' 
                     }
                 ]
             }
@@ -256,7 +270,7 @@ export default {
         },
         //权限新建和编辑弹窗确定
         handleSureAuthorityModal(formName) {
-            console.log('er', formName, this.authorityForm);
+            console.log('er',formName,this.authorityForm)
             this.$refs[formName].validate((valid) => {
                 if (valid) {
                     this.$set(this.authorityForm, 'visible', false);
@@ -266,6 +280,7 @@ export default {
                 }
             });
         },
+<<<<<<< HEAD
         // 弹框关闭前操作
         dialogClose(){
             console.log('弹框关闭前操作');
@@ -273,6 +288,8 @@ export default {
             this.$refs['authorityForm'].clearValidate();
             this.authorityForm.visible  = false;
         }
+=======
+>>>>>>> 3c37f1af5e4cecef7b9a8a948fc2a793a746403e
     }
 };
 </script>
@@ -531,6 +548,7 @@ export default {
                 })
                 console.log('dealOptions', dealOptions);
                 this.tableData = dealOptions;
+                // 父级下拉框数据
                 dealOptions.forEach((ev,i)=>{
                     this.categoryOptions.push({
                         key: ev.id,
@@ -606,9 +624,10 @@ export default {
                 this.idx = index;
                 this.editVisible = true;
                 this.$nextTick(()=>{
-                    const new_obj = JSON.parse(JSON.stringify(row));
-                    new_obj['parentsCategoryId'] = row.id;
-                    new_obj['name'] = '';
+                    // const new_obj = JSON.parse(JSON.stringify(row));
+                    const new_obj = {};
+                    new_obj['pid'] = row.pid;
+                    // new_obj['name'] = '';
                     console.log('new_obj', new_obj);
                     // 触发更新
                     this.form = Object.assign({}, this.form,new_obj);

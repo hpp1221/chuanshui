@@ -4,7 +4,7 @@
             <div class="global-table-title">
                 <div class="title">
                     <i></i>
-                    <span>参数配置</span>
+                    <span>角色管理</span>
                 </div>
                 <el-button type="primary" @click="handleCreateRole">新建角色</el-button>
             </div>
